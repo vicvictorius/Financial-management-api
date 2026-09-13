@@ -7,6 +7,7 @@ from sqlalchemy import engine_from_config, pool
 
 from app.database.database import Base
 from app.database.models.user import User
+from app.database.models import Transaction
 
 # IMPORTANTE: carrega as variaveis do .env
 load_dotenv()
