@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
 from app.database.database import Base, engine
-from app.database.models import user
-from app.routers import auth
+from app.database.models import user, category
+from app.routers import auth, categories
 
 
 Base.metadata.create_all(bind=engine)
@@ -23,3 +23,4 @@ def root():
 
 
 app.include_router(auth.router)
+app.include_router(categories.router)
