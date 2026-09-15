@@ -20,6 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Lint
+        run: |
+          docker compose run --rm api ruff check .
+
       - name: Build containers
         run: |
           docker compose build

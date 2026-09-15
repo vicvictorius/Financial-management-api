@@ -6,15 +6,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class TransactionCreate(BaseModel):
+    description: str = Field(min_length=1, max_length=255)
 
-    description: str = Field(
-        min_length=1,
-        max_length=255
-    )
-
-    amount: Decimal = Field(
-        gt=0
-    )
+    amount: Decimal = Field(gt=0)
 
     type: Literal["income", "expense"]
 
@@ -22,17 +16,9 @@ class TransactionCreate(BaseModel):
 
 
 class TransactionUpdate(BaseModel):
+    description: str | None = Field(default=None, min_length=1, max_length=255)
 
-    description: str | None = Field(
-        default=None,
-        min_length=1,
-        max_length=255
-    )
-
-    amount: Decimal | None = Field(
-        default=None,
-        gt=0
-    )
+    amount: Decimal | None = Field(default=None, gt=0)
 
     type: Literal["income", "expense"] | None = None
 
@@ -40,7 +26,6 @@ class TransactionUpdate(BaseModel):
 
 
 class TransactionResponse(BaseModel):
-
     model_config = ConfigDict(from_attributes=True)
 
     id: int

@@ -1,2 +1,4 @@
-from app.database.models.transaction import Transaction
 from .category import Category
+from .transaction import Transaction
+
+__all__ = ["Transaction", "Category"]
