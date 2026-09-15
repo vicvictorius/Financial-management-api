@@ -5,6 +5,7 @@ from app.database.database import Base, engine
 from app.database.models import user, category
 from app.api.routers import categories
 from app.api.routers.transactions import router as transaction_router
+from app.api.routers.dashboard import router as dashboard_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -27,3 +28,4 @@ def root():
 app.include_router(auth.router)
 app.include_router(categories.router)
 app.include_router(transaction_router)
+app.include_router(dashboard_router)
