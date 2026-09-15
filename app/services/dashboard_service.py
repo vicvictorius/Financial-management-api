@@ -33,3 +33,44 @@ def get_dashboard_summary(
         "total_expenses": float(total_expenses),
         "balance": float(balance)
     }
+
+
+def get_dashboard_monthly(
+    db: Session,
+    user_id: int
+):
+    transactions = (
+        db.query(Transaction)
+        .filter(
+            Transaction.user_id == user_id
+        )
+        .order_by(Transaction.created_at)
+        .all()
+    )
+
+    monthly_data = {}
+
+    for transaction in transactions:
+        month = transaction.created_at.strftime("%Y-%m")
+
+        if month not in monthly_data:
+            monthly_data[month] = {
+                "income": 0.0,
+                "expenses": 0.0,
+                "balance": 0.0
+            }
+
+        amount = float(transaction.amount)
+
+        if transaction.type == "income":
+            monthly_data[month]["income"] += amount
+
+        elif transaction.type == "expense":
+            monthly_data[month]["expenses"] += amount
+
+        monthly_data[month]["balance"] = (
+            monthly_data[month]["income"]
+            - monthly_data[month]["expenses"]
+        )
+
+    return monthly_data

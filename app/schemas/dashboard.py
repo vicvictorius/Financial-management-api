@@ -10,4 +10,9 @@ class MonthlySummary(BaseModel):
     expenses: float
     balance: float
 
+class MonthlyDashboard(BaseModel):
+    income: float
+    expenses: float
+    balance: float
+
 dict[str, MonthlySummary]
