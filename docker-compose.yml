@@ -1,29 +1,30 @@
 services:
   api:
-    build: .
     container_name: financial_api
-
-    ports:
-      - "8000:8000"
-
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - ${ENV_FILE:-.env}
-
+    ports:
+      - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
-    image: postgres:16
     container_name: financial_postgres
-
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: financial_db
-
-
+    image: postgres:16
+    env_file:
+      - ${ENV_FILE:-.env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+     test: ["CMD-SHELL", "pg_isready"]
+     interval: 5s
+     timeout: 5s
+     retries: 10
+     start_period: 5s
 
 volumes:
   postgres_data:
