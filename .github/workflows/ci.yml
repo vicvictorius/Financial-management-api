@@ -42,3 +42,22 @@ jobs:
       - name: Cleanup
         if: always()
         run: ENV_FILE=.env.test docker compose down -v
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: ENV_FILE=.env.test docker compose build
+
+      - name: Run Integration Tests
+        run: ENV_FILE=.env.test docker compose run --rm api pytest tests/integration -v
+
+      - name: Cleanup
+        if: always()
+        run: ENV_FILE=.env.test docker compose down -v
