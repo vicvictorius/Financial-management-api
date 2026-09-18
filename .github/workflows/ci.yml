@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   lint:
     name: Lint
@@ -98,3 +102,25 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t financial-management-api:${{ github.sha }} .
+
+  docker-push:
+    name: Docker Push
+    runs-on: ubuntu-latest
+    needs: docker-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}:${{ github.sha }} .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
