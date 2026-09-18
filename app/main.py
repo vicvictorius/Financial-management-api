@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.api.routers import auth, categories
 from app.api.routers.dashboard import router as dashboard_router
+from app.api.routers.health import router as health_router
 from app.api.routers.transactions import router as transaction_router
 from app.database.database import Base, engine
 
@@ -24,3 +25,4 @@ app.include_router(auth.router)
 app.include_router(categories.router)
 app.include_router(transaction_router)
 app.include_router(dashboard_router)
+app.include_router(health_router)
