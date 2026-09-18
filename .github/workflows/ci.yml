@@ -123,7 +123,13 @@ jobs:
         run: echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
 
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:${{ github.sha }} .
+        run: |
+          docker build \
+            -t $IMAGE_NAME:${{ github.sha }} \
+            -t $IMAGE_NAME:latest \
+            .
 
       - name: Push Docker image
-        run: docker push $IMAGE_NAME:${{ github.sha }}
+        run: |
+          docker push $IMAGE_NAME:${{ github.sha }}
+          docker push $IMAGE_NAME:latest
