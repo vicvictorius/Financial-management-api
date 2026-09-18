@@ -4,35 +4,41 @@ on:
   push:
     branches:
       - main
-
+      - feature/ci-cd
   pull_request:
     branches:
       - main
 
 jobs:
-
-  test:
-
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Lint
-        run: |
-          docker compose run --rm api ruff check .
+      - name: Build Docker image
+        run: docker compose build
 
-      - name: Build containers
-        run: |
-          docker compose build
+      - name: Run Ruff
+        run: docker compose run --rm api ruff check .
 
-      - name: Run tests
-        run: |
-          ENV_FILE=.env.test docker compose run --rm api pytest
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
 
-      - name: Stop containers
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Run Unit Tests
+        run: ENV_FILE=.env.test docker compose run --rm api pytest -v
+
+      - name: Cleanup
         if: always()
-        run: |
-          ENV_FILE=.env.test docker compose down -v
+        run: ENV_FILE=.env.test docker compose down -v
