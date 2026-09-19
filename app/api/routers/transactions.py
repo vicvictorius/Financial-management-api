@@ -4,7 +4,11 @@ from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database.database import get_db
 from app.database.models.user import User
-from app.schemas.transaction import TransactionCreate, TransactionResponse, TransactionUpdate
+from app.schemas.transaction import (
+    TransactionCreate,
+    TransactionResponse,
+    TransactionUpdate,
+)
 from app.services.transaction_service import (
     create_transaction,
     delete_transaction,
@@ -16,7 +20,11 @@ from app.services.transaction_service import (
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
 
-@router.post("/", response_model=TransactionResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=TransactionResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 def create(
     transaction_data: TransactionCreate,
     db: Session = Depends(get_db),
@@ -27,7 +35,8 @@ def create(
 
 @router.get("/", response_model=list[TransactionResponse])
 def list_transactions(
-    db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     return get_transactions(db, current_user.id)
 
@@ -41,7 +50,10 @@ def get_by_id(
     transaction = get_transaction(db, transaction_id, current_user.id)
 
     if not transaction:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
 
     return transaction
 
@@ -56,7 +68,10 @@ def update(
     transaction = get_transaction(db, transaction_id, current_user.id)
 
     if not transaction:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
 
     return update_transaction(db, transaction, transaction_data)
 
@@ -70,6 +85,9 @@ def delete(
     transaction = get_transaction(db, transaction_id, current_user.id)
 
     if not transaction:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
 
     delete_transaction(db, transaction)
