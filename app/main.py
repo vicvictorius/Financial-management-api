@@ -4,10 +4,6 @@ from app.api.routers import auth, categories
 from app.api.routers.dashboard import router as dashboard_router
 from app.api.routers.health import router as health_router
 from app.api.routers.transactions import router as transaction_router
-from app.database.database import Base, engine
-
-Base.metadata.create_all(bind=engine)
-
 
 app = FastAPI(
     title="Financial Management API",
