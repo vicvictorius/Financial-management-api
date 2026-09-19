@@ -5,9 +5,7 @@ from app.database.models.category import Category
 
 def create_category(db: Session, name: str):
 
-    existing_category = db.query(Category).filter(
-        Category.name == name
-    ).first()
+    existing_category = db.query(Category).filter(Category.name == name).first()
 
     if existing_category:
         return None
@@ -28,6 +26,4 @@ def get_categories(db: Session):
 
 def get_category(db: Session, category_id: int):
 
-    return db.query(Category).filter(
-        Category.id == category_id
-    ).first()
+    return db.query(Category).filter(Category.id == category_id).first()

@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, DateTime
-from sqlalchemy.sql import func
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from app.database.database import Base
+
 
 class Transaction(Base):
     __tablename__ = "transactions"
@@ -12,23 +13,11 @@ class Transaction(Base):
     amount = Column(Numeric(10, 2), nullable=False)
     type = Column(String, nullable=False)
 
-    category_id = Column(
-        Integer,
-        ForeignKey("categories.id"),
-        nullable=False
-    )
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
 
-    user_id = Column(
-        Integer,
-        ForeignKey("users.id"),
-        nullable=False
-    )
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-    created_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     category = relationship("Category")
     user = relationship("User")
