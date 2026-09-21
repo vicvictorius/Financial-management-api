@@ -926,7 +926,7 @@ Potential future improvements include:
 
 # Author
 
-**Victor**
+**vicvictorius**
 
 Backend/API project focused on **Python, FastAPI, PostgreSQL, authentication, automated testing, CI/CD, Docker, cloud deployment, and observability**.
 
