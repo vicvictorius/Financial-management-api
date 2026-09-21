@@ -14,8 +14,20 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    return create_user(db, user.username, user.email, user.password)
+    new_user = create_user(
+        db,
+        user.username,
+        user.email,
+        user.password,
+    )
 
+    if not new_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username or email already exists",
+        )
+
+    return new_user
 
 @router.post("/login", response_model=Token)
 def login(

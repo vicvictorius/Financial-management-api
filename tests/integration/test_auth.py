@@ -105,3 +105,48 @@ def test_invalid_jwt(client):
     )
 
     assert response.status_code == 401
+
+def test_register_duplicate_username(client):
+    client.post(
+        "/auth/register",
+        json={
+            "username": "victor",
+            "email": "victor@test.com",
+            "password": "123456",
+        },
+    )
+
+    response = client.post(
+        "/auth/register",
+        json={
+            "username": "victor",
+            "email": "outro@test.com",
+            "password": "123456",
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Username or email already exists"
+
+
+def test_register_duplicate_email(client):
+    client.post(
+        "/auth/register",
+        json={
+            "username": "victor",
+            "email": "victor@test.com",
+            "password": "123456",
+        },
+    )
+
+    response = client.post(
+        "/auth/register",
+        json={
+            "username": "outro",
+            "email": "victor@test.com",
+            "password": "123456",
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Username or email already exists"
