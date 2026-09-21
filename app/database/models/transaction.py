@@ -13,11 +13,23 @@ class Transaction(Base):
     amount = Column(Numeric(10, 2), nullable=False)
     type = Column(String, nullable=False)
 
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+    category_id = Column(
+        Integer,
+        ForeignKey("categories.id"),
+        nullable=False,
+    )
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False,
+    )
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
 
     category = relationship("Category")
     user = relationship("User")
