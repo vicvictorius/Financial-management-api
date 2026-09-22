@@ -1,21 +1,14 @@
 # Financial Management API
 
-A RESTful API for personal financial management, built with **FastAPI**, **PostgreSQL**, **SQLAlchemy**, and **JWT authentication**.
+A RESTful API for personal financial management, built with FastAPI, PostgreSQL, SQLAlchemy, and JWT authentication.
 
 The project was developed with a focus on clean architecture, secure authentication, automated testing, containerization, CI/CD, database migrations, and application observability.
-
-[![Python](https://img.shields.io/badge/Python-3.14-blue?logo=python)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.141.1-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)](https://www.docker.com/)
-[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?logo=githubactions)](https://github.com/features/actions)
-[![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-E6522C?logo=prometheus)](https://prometheus.io/)
 
 ---
 
 ## Overview
 
-**Financial Management API** is a backend application designed to provide a structured and secure way to manage personal financial data.
+Financial Management API is a backend application designed to provide a structured and secure way to manage personal financial data.
 
 The API allows authenticated users to create and manage financial transactions, organize them into categories, and visualize financial summaries through dashboard endpoints.
 
@@ -85,6 +78,8 @@ The project also implements a complete development and deployment workflow, incl
 * Ruff linting
 * Bandit security analysis
 * pip-audit dependency auditing
+* Environment files excluded from version control
+* Dynamically generated CI test environments
 
 ### Observability
 
@@ -141,51 +136,51 @@ This structure keeps responsibilities separated and makes the application easier
 
 ## Backend
 
-* **Python 3.14**
-* **FastAPI**
-* **Uvicorn**
-* **Pydantic**
-* **SQLAlchemy**
-* **PostgreSQL**
+* Python 3.14
+* FastAPI
+* Uvicorn
+* Pydantic
+* SQLAlchemy
+* PostgreSQL
 
 ## Authentication & Security
 
-* **JWT**
-* **python-jose**
-* **Passlib**
-* **bcrypt**
-* **OAuth2 Password Flow**
+* JWT
+* python-jose
+* Passlib
+* bcrypt
+* OAuth2 Password Flow
 
 ## Database & Migrations
 
-* **PostgreSQL**
-* **SQLAlchemy**
-* **Alembic**
+* PostgreSQL
+* SQLAlchemy
+* Alembic
 
 ## Testing
 
-* **Pytest**
-* **pytest-asyncio**
-* **HTTPX**
+* Pytest
+* pytest-asyncio
+* HTTPX
 
 ## Code Quality & Security
 
-* **Ruff**
-* **Bandit**
-* **pip-audit**
+* Ruff
+* Bandit
+* pip-audit
 
 ## DevOps
 
-* **Docker**
-* **Docker Compose**
-* **GitHub Actions**
-* **GitHub Container Registry**
-* **Render**
+* Docker
+* Docker Compose
+* GitHub Actions
+* GitHub Container Registry
+* Render
 
 ## Observability
 
-* **Prometheus**
-* **prometheus-client**
+* Prometheus
+* prometheus-client
 
 ---
 
@@ -254,6 +249,7 @@ financial-management-api/
 │   └── workflows/
 │       └── ci.yml
 │
+├── .env.example
 ├── Dockerfile
 ├── docker-compose.yml
 ├── entrypoint.sh
@@ -265,11 +261,13 @@ financial-management-api/
 └── README.md
 ```
 
+Environment-specific `.env` files are intentionally excluded from the repository.
+
 ---
 
 # Authentication
 
-The API uses **JWT access tokens** to protect user-specific resources.
+The API uses JWT access tokens to protect user-specific resources.
 
 Authentication flow:
 
@@ -292,7 +290,7 @@ sequenceDiagram
 
 Protected requests use:
 
-```http
+```text
 Authorization: Bearer <access_token>
 ```
 
@@ -311,7 +309,7 @@ Transaction and dashboard resources are associated with the authenticated user's
 
 ### Register
 
-```http
+```text
 POST /auth/register
 ```
 
@@ -327,7 +325,7 @@ Example request:
 
 ### Login
 
-```http
+```text
 POST /auth/login
 ```
 
@@ -360,7 +358,7 @@ Example response:
 
 ### Create category
 
-```http
+```text
 POST /categories/
 ```
 
@@ -388,7 +386,7 @@ All transaction endpoints require JWT authentication.
 
 Example authorization header:
 
-```http
+```text
 Authorization: Bearer <access_token>
 ```
 
@@ -417,7 +415,7 @@ Example summary response:
 
 ## Health Check
 
-```http
+```text
 GET /health
 ```
 
@@ -435,9 +433,9 @@ The endpoint is used to verify application availability.
 
 # Observability
 
-The application exposes metrics compatible with **Prometheus**.
+The application exposes metrics compatible with Prometheus.
 
-```http
+```text
 GET /metrics/
 ```
 
@@ -485,9 +483,9 @@ This allows the application to be integrated with monitoring systems such as Pro
 
 # Database & Migrations
 
-The application uses **PostgreSQL** as its relational database.
+The application uses PostgreSQL as its relational database.
 
-SQLAlchemy is responsible for database interaction, while **Alembic** manages schema migrations.
+SQLAlchemy is responsible for database interaction, while Alembic manages schema migrations.
 
 ```text
 Application
@@ -532,9 +530,30 @@ The application is containerized using Docker.
 docker build -t financial-management-api .
 ```
 
-## Run with Docker Compose
+## Test Environment
 
-For the test environment:
+Environment-specific files are not stored in the repository.
+
+For local testing, create a `.env.test` file using the required test configuration.
+
+Example:
+
+```env
+DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/financial_db
+TEST_DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/financial_db
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=financial_db
+
+SECRET_KEY=test-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+These credentials are intended exclusively for the isolated local test environment and must never be reused in production.
+
+Start the test environment with:
 
 ```bash
 ENV_FILE=.env.test docker compose up --build
@@ -546,11 +565,17 @@ The API will be available at:
 http://localhost:8000
 ```
 
+Stop the environment and remove its volumes with:
+
+```bash
+ENV_FILE=.env.test docker compose down -v
+```
+
 ---
 
 # Testing
 
-The project uses **Pytest** for automated testing.
+The project uses Pytest for automated testing.
 
 Integration tests are located in:
 
@@ -574,7 +599,15 @@ Run the complete test suite through Docker:
 ENV_FILE=.env.test docker compose run --rm api pytest -v
 ```
 
-The test environment uses a dedicated PostgreSQL configuration defined in `.env.test`.
+Run only integration tests:
+
+```bash
+ENV_FILE=.env.test docker compose run --rm api pytest tests/integration -v
+```
+
+The local test environment uses a dedicated PostgreSQL configuration provided through `.env.test`.
+
+The `.env.test` file is intentionally ignored by Git and is never required to be committed to the repository.
 
 ---
 
@@ -612,7 +645,7 @@ These checks are executed automatically through GitHub Actions.
 
 # CI/CD Pipeline
 
-The project implements an automated CI/CD pipeline using **GitHub Actions**.
+The project implements an automated CI/CD pipeline using GitHub Actions.
 
 ```mermaid
 flowchart LR
@@ -638,14 +671,16 @@ The pipeline performs the following stages:
 
 1. Checkout source code
 2. Run Ruff
-3. Build Docker test environment
-4. Run tests
-5. Run integration tests
-6. Run pip-audit
-7. Run Bandit
-8. Build production Docker image
-9. Push image to GitHub Container Registry
-10. Trigger Render deployment
+3. Dynamically create the isolated test environment
+4. Build the Docker test environment
+5. Run automated tests
+6. Recreate an isolated environment for integration tests
+7. Run integration tests
+8. Run pip-audit
+9. Run Bandit
+10. Build the production Docker image
+11. Push the image to GitHub Container Registry
+12. Trigger Render deployment
 
 Workflow file:
 
@@ -653,13 +688,57 @@ Workflow file:
 .github/workflows/ci.yml
 ```
 
-The deployment stage is configured to run when changes are pushed to the deployment branch after the previous pipeline stages succeed.
+## CI Test Environment
+
+The CI pipeline does not depend on a committed `.env.test` file.
+
+Each GitHub Actions test runner dynamically creates its own temporary `.env.test` configuration after checking out the repository.
+
+```text
+GitHub Actions Runner
+        │
+        ▼
+Checkout Repository
+        │
+        ▼
+Create Temporary .env.test
+        │
+        ▼
+Build Docker Environment
+        │
+        ├── FastAPI
+        └── PostgreSQL
+        │
+        ▼
+Run Automated Tests
+        │
+        ▼
+Docker Cleanup
+        │
+        ▼
+Runner Destroyed
+```
+
+Unit tests and integration tests run in separate GitHub Actions jobs. Each job therefore creates its own isolated test configuration.
+
+The temporary test environment exists only for the lifetime of its runner.
+
+This strategy provides:
+
+* Reproducible test environments
+* Isolation between CI jobs
+* Separation between test and production configuration
+* Protection against accidental commits of environment files
+* Disposable PostgreSQL credentials for automated testing
+* Cleaner configuration management
+
+The deployment stage runs only after all previous pipeline stages complete successfully.
 
 ---
 
 # GitHub Container Registry
 
-Production Docker images are published to **GitHub Container Registry (GHCR)**.
+Production Docker images are published to GitHub Container Registry (GHCR).
 
 The pipeline publishes:
 
@@ -674,7 +753,7 @@ The commit SHA tag provides an immutable reference to the source revision associ
 
 # Deployment
 
-The application is deployed to **Render**.
+The application is deployed to Render.
 
 Production URL:
 
@@ -712,6 +791,8 @@ curl -i https://financial-management-api-8h37.onrender.com/metrics/
 
 The production `/metrics/` endpoint exposes application and Python process metrics.
 
+Production configuration is managed separately from source-controlled configuration.
+
 ---
 
 # Environment Variables
@@ -735,7 +816,26 @@ The repository provides:
 
 as a configuration reference.
 
-> **Never commit real database credentials, JWT secrets, API keys, or other sensitive values to the repository.**
+Environment-specific files are excluded through `.gitignore`:
+
+```gitignore
+.env
+.env.*
+!.env.example
+```
+
+This means:
+
+```text
+.env                  → local configuration, ignored
+.env.test             → local test configuration, ignored
+.env.production       → production configuration, ignored
+.env.example          → configuration template, versioned
+```
+
+Production secrets such as database credentials, JWT secrets and deployment credentials must be managed outside the source code.
+
+> Never commit real database credentials, JWT secrets, API keys, deployment hooks, or other sensitive values to the repository.
 
 ---
 
@@ -773,6 +873,8 @@ cp .env.example .env
 ```
 
 Configure the variables according to your local environment.
+
+For Docker-based tests, create a separate `.env.test` using test-only values.
 
 ## 5. Run database migrations
 
@@ -864,10 +966,18 @@ Security-related practices implemented in the project include:
 * Password hashing
 * User-level data isolation
 * Environment-based secret configuration
+* Environment files excluded from version control
+* Isolated and disposable CI test configuration
+* Separation between test and production credentials
 * Pydantic request validation
 * Bandit static security analysis
 * Dependency vulnerability auditing
 * Protected transaction and dashboard endpoints
+* Deployment credentials managed through GitHub Actions Secrets
+
+The repository intentionally tracks `.env.example` while ignoring environment-specific files.
+
+The CI pipeline dynamically creates test configuration during execution instead of depending on a committed `.env.test`.
 
 Additional security information is available in:
 
@@ -895,6 +1005,7 @@ Current implementation includes:
 * [x] Docker
 * [x] Docker Compose
 * [x] GitHub Actions CI/CD
+* [x] Isolated CI test environments
 * [x] Ruff linting
 * [x] Bandit security scanning
 * [x] pip-audit dependency auditing
@@ -903,6 +1014,7 @@ Current implementation includes:
 * [x] Health Check
 * [x] Prometheus metrics
 * [x] Production observability
+* [x] Environment configuration protection
 
 ---
 
@@ -921,14 +1033,15 @@ Potential future improvements include:
 * API versioning
 * Expanded automated test coverage
 * Production alerting
+* Secret scanning and additional DevSecOps controls
 
 ---
 
 # Author
 
-**vicvictorius**
+Victor
 
-Backend/API project focused on **Python, FastAPI, PostgreSQL, authentication, automated testing, CI/CD, Docker, cloud deployment, and observability**.
+Backend/API project focused on Python, FastAPI, PostgreSQL, authentication, automated testing, CI/CD, Docker, cloud deployment, security, and observability.
 
 ---
 
